@@ -9,11 +9,17 @@ const navToggle = document.getElementById('navToggle');
 const navLinks = document.getElementById('navLinks');
 
 navToggle.addEventListener('click', () => {
-  navLinks.classList.toggle('open');
+  const isOpen = navLinks.classList.toggle('open');
+  navToggle.classList.toggle('open', isOpen);
+  document.body.style.overflow = isOpen ? 'hidden' : '';
 });
 
 navLinks.querySelectorAll('.nav-link').forEach(link => {
-  link.addEventListener('click', () => navLinks.classList.remove('open'));
+  link.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    navToggle.classList.remove('open');
+    document.body.style.overflow = '';
+  });
 });
 
 // Filtro de produtos
@@ -33,10 +39,21 @@ document.querySelectorAll('.filtro-btn').forEach(btn => {
 // Formulário
 function enviarFormulario(event) {
   event.preventDefault();
-  const feedback = document.getElementById('formFeedback');
-  feedback.textContent = '✓ Mensagem enviada! Entraremos em contato em breve 🌿';
+
+  const nome    = document.getElementById('nome').value.trim();
+
+  const assunto = document.getElementById('assunto').value.trim();
+  const mensagem = document.getElementById('mensagem').value.trim();
+
+  const texto = `Olá! Me chamo *${nome}*.\n\n` +
+    (assunto ? `*Produto/assunto:* ${assunto}\n\n` : '') +
+    `*Mensagem:*\n${mensagem}`;
+
+  const numero = '5513996084557';
+  const url = `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`;
+
+  window.open(url, '_blank');
   event.target.reset();
-  setTimeout(() => { feedback.textContent = ''; }, 6000);
 }
 
 // Animação de entrada ao scrollar
